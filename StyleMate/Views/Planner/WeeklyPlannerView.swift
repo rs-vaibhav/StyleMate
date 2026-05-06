@@ -6,6 +6,8 @@ struct WeeklyPlannerView: View {
     @ObservedObject var outfitVM: OutfitViewModel
     
     @State private var selectedDate: Date? = nil
+    @State private var previewSuggestion: OutfitSuggestion? = nil
+    @State private var showPreview = false
     
     private var weekDates: [Date] {
         Date.currentWeekDates()
@@ -18,11 +20,11 @@ struct WeeklyPlannerView: View {
                 VStack(spacing: 8) {
                     Text("Weekly Planner")
                         .font(.title.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textPrimary)
                     
                     Text("Plan your outfits for the week")
                         .font(.callout)
-                        .foregroundColor(.white.opacity(0.5))
+                        .foregroundColor(Theme.textSecondary)
                 }
                 .padding(.top, 16)
                 
@@ -34,6 +36,31 @@ struct WeeklyPlannerView: View {
                 Spacer(minLength: 100)
             }
             .padding(.horizontal, 16)
+        }
+        .alert("Confirm Outfit?", isPresented: $showPreview) {
+            Button("Confirm") {
+                if previewSuggestion != nil {
+                    outfitVM.confirmOutfit()
+                }
+            }
+            Button("Shuffle") {
+                if let date = selectedDate {
+                    outfitVM.shuffleSuggestion(
+                        for: date,
+                        profile: profileVM.profile,
+                        wardrobe: wardrobeVM.items
+                    )
+                    outfitVM.confirmOutfit()
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            if let suggestion = previewSuggestion {
+                let items = [suggestion.top?.name, suggestion.bottom?.name, suggestion.footwear?.name]
+                    .compactMap { $0 }
+                    .joined(separator: " + ")
+                Text("Outfit: \(items)\nVibe Match: \(suggestion.matchScore)%")
+            }
         }
     }
     
@@ -51,7 +78,7 @@ struct WeeklyPlannerView: View {
                     HStack(spacing: 6) {
                         Text(date.dayOfWeekName)
                             .font(.headline.weight(.bold))
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.textPrimary)
                         
                         if isToday {
                             Text("TODAY")
@@ -60,7 +87,7 @@ struct WeeklyPlannerView: View {
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
                                 .background(
-                                    LinearGradient.cosmicAccent
+                                    LinearGradient.vibrantAccent
                                 )
                                 .clipShape(Capsule())
                         }
@@ -71,12 +98,12 @@ struct WeeklyPlannerView: View {
                             .font(.caption)
                         Text(planet.name)
                             .font(.caption)
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(Theme.textSecondary)
                         Text("•")
-                            .foregroundColor(.white.opacity(0.3))
+                            .foregroundColor(Theme.textMuted)
                         Text("\(date.dayNumber) \(date.monthName)")
                             .font(.caption)
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(Theme.textSecondary)
                     }
                 }
                 
@@ -108,30 +135,32 @@ struct WeeklyPlannerView: View {
                 
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
+                        .foregroundColor(Theme.accentGreen)
                         .font(.caption)
                     Text("Outfit set!")
                         .font(.caption)
-                        .foregroundColor(.green.opacity(0.8))
+                        .foregroundColor(Theme.accentGreen)
                 }
             } else if !wardrobeVM.items.isEmpty {
                 Button {
+                    selectedDate = date
                     outfitVM.generateSuggestion(
                         for: date,
                         profile: profileVM.profile,
                         wardrobe: wardrobeVM.items
                     )
-                    outfitVM.confirmOutfit()
+                    previewSuggestion = outfitVM.currentSuggestion
+                    showPreview = true
                 } label: {
                     HStack {
                         Image(systemName: "wand.and.stars")
                         Text("Auto-suggest")
                     }
                     .font(.caption.weight(.medium))
-                    .foregroundColor(Color(red: 0.6, green: 0.3, blue: 0.9))
+                    .foregroundColor(Theme.accentGreen)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
-                    .background(Color(red: 0.6, green: 0.3, blue: 0.9).opacity(0.15))
+                    .background(Theme.accentGreen.opacity(0.10))
                     .clipShape(Capsule())
                 }
             }
@@ -141,7 +170,7 @@ struct WeeklyPlannerView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 20)
                 .stroke(
-                    isToday ? Color(red: 0.6, green: 0.3, blue: 0.9).opacity(0.5) : Color.clear,
+                    isToday ? Theme.accentRed.opacity(0.4) : Color.clear,
                     lineWidth: 2
                 )
         )
@@ -154,12 +183,12 @@ struct WeeklyPlannerView: View {
                 .frame(width: 8, height: 8)
             Text(name)
                 .font(.caption2)
-                .foregroundColor(.white.opacity(0.7))
+                .foregroundColor(Theme.textSecondary)
                 .lineLimit(1)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .background(Color.white.opacity(0.06))
+        .background(Theme.background)
         .clipShape(Capsule())
     }
 }

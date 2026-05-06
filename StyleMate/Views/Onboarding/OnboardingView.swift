@@ -9,14 +9,14 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            CosmicBackground()
+            VibrantBackground()
             
             VStack(spacing: 0) {
                 // Progress bar
                 HStack(spacing: 4) {
                     ForEach(0..<totalSteps, id: \.self) { i in
                         Capsule()
-                            .fill(i <= step ? Color(red: 0.6, green: 0.3, blue: 0.9) : Color.white.opacity(0.2))
+                            .fill(i <= step ? Theme.accentRed : Theme.cardBorder)
                             .frame(height: 4)
                             .animation(.easeInOut(duration: 0.3), value: step)
                     }
@@ -49,18 +49,19 @@ struct OnboardingView: View {
                 HStack(spacing: 16) {
                     if step > 0 {
                         Button {
-                            withAnimation(.easeInOut(duration: 0.4)) { step -= 1 }
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { step -= 1 }
                         } label: {
                             HStack {
                                 Image(systemName: "chevron.left")
                                 Text("Back")
                             }
                             .font(.body.weight(.medium))
-                            .foregroundColor(.white.opacity(0.7))
+                            .foregroundColor(Theme.textSecondary)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 14)
-                            .background(Color.white.opacity(0.1))
+                            .background(Color.white)
                             .clipShape(Capsule())
+                            .shadow(color: Theme.shadowLight, radius: 6, x: 0, y: 3)
                         }
                     }
                     
@@ -68,7 +69,7 @@ struct OnboardingView: View {
                     
                     Button {
                         if step < totalSteps - 1 {
-                            withAnimation(.easeInOut(duration: 0.4)) { step += 1 }
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { step += 1 }
                         } else {
                             profileVM.completeOnboarding()
                         }
@@ -82,10 +83,10 @@ struct OnboardingView: View {
                         .padding(.horizontal, 32)
                         .padding(.vertical, 14)
                         .background(
-                            LinearGradient.cosmicAccent
+                            LinearGradient.vibrantAccent
                         )
                         .clipShape(Capsule())
-                        .shadow(color: Color(red: 0.5, green: 0.2, blue: 0.9).opacity(0.5), radius: 12, y: 4)
+                        .shadow(color: Theme.accentRed.opacity(0.4), radius: 12, y: 4)
                     }
                     .disabled(step == 0 && profileVM.profile.name.trimmingCharacters(in: .whitespaces).isEmpty)
                     .opacity(step == 0 && profileVM.profile.name.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
@@ -102,28 +103,28 @@ struct OnboardingView: View {
         VStack(spacing: 24) {
             Image(systemName: "star.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(LinearGradient.goldenHour)
+                .foregroundStyle(LinearGradient.sunshineYellow)
             
             Text("Welcome to StyleMate")
                 .font(.largeTitle.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             Text("Your cosmic style companion")
                 .font(.title3)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(Theme.textSecondary)
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("What's your name?")
                     .font(.callout.weight(.medium))
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(Theme.textSecondary)
                 
                 TextField("Enter your name", text: $profileVM.profile.name)
                     .font(.title3)
                     .padding()
-                    .background(Color.white.opacity(0.1))
+                    .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
-                    .foregroundColor(.white)
-                    .accentColor(Color(red: 0.6, green: 0.3, blue: 0.9))
+                    .foregroundColor(Theme.textPrimary)
+                    .shadow(color: Theme.shadowLight, radius: 6, x: 0, y: 3)
             }
             .padding(.horizontal, 30)
         }
@@ -137,26 +138,25 @@ struct OnboardingView: View {
             
             Text("When were you born?")
                 .font(.title.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             Text("We'll determine your zodiac sign")
                 .font(.body)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(Theme.textSecondary)
             
             DatePicker("", selection: $profileVM.profile.dateOfBirth, displayedComponents: .date)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
-                .colorScheme(.dark)
                 .frame(maxHeight: 180)
             
             VStack(spacing: 8) {
                 Text("Your sign: \(profileVM.profile.zodiacSign.rawValue) \(profileVM.profile.zodiacSign.symbol)")
                     .font(.title2.weight(.semibold))
-                    .foregroundColor(Color(red: 0.6, green: 0.3, blue: 0.9))
+                    .foregroundColor(Theme.accentPurple)
                 
                 Text(profileVM.profile.zodiacSign.element)
                     .font(.callout)
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(Theme.textSecondary)
             }
             .padding()
             .glassCard()
@@ -168,15 +168,15 @@ struct OnboardingView: View {
         VStack(spacing: 24) {
             Image(systemName: "figure.stand")
                 .font(.system(size: 60))
-                .foregroundStyle(LinearGradient.cosmicAccent)
+                .foregroundStyle(LinearGradient.vibrantAccent)
             
             Text("What's your style vibe?")
                 .font(.title.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             Text("Helps us personalize suggestions")
                 .font(.body)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(Theme.textSecondary)
             
             HStack(spacing: 16) {
                 ForEach(Gender.allCases, id: \.self) { gender in
@@ -189,24 +189,16 @@ struct OnboardingView: View {
                             Text(gender.rawValue)
                                 .font(.callout.weight(.medium))
                         }
-                        .foregroundColor(profileVM.profile.gender == gender ? .white : .white.opacity(0.5))
+                        .foregroundColor(profileVM.profile.gender == gender ? .white : Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 24)
                         .background(
                             profileVM.profile.gender == gender
-                                ? AnyShapeStyle(LinearGradient.cosmicAccent)
-                                : AnyShapeStyle(Color.white.opacity(0.08))
+                                ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                                : AnyShapeStyle(Color.white)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(
-                                    profileVM.profile.gender == gender
-                                        ? Color(red: 0.6, green: 0.3, blue: 0.9)
-                                        : Color.clear,
-                                    lineWidth: 2
-                                )
-                        )
+                        .shadow(color: profileVM.profile.gender == gender ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 8, y: 4)
                     }
                 }
             }
@@ -222,11 +214,11 @@ struct OnboardingView: View {
             
             Text("Your Skin Tone")
                 .font(.title.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             Text("For better color-matching recommendations")
                 .font(.body)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(Theme.textSecondary)
             
             HStack(spacing: 14) {
                 ForEach(SkinTone.allCases, id: \.self) { tone in
@@ -239,21 +231,22 @@ struct OnboardingView: View {
                                 .frame(width: 50, height: 50)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.white, lineWidth: profileVM.profile.skinTone == tone ? 3 : 0)
+                                        .stroke(Theme.accentGreen, lineWidth: profileVM.profile.skinTone == tone ? 3 : 0)
                                 )
                             
                             Text(tone.rawValue)
                                 .font(.caption.weight(.medium))
-                                .foregroundColor(profileVM.profile.skinTone == tone ? .white : .white.opacity(0.5))
+                                .foregroundColor(profileVM.profile.skinTone == tone ? Theme.textPrimary : Theme.textMuted)
                         }
                         .padding(.vertical, 16)
                         .frame(maxWidth: .infinity)
                         .background(
                             profileVM.profile.skinTone == tone
-                                ? Color.white.opacity(0.15)
-                                : Color.white.opacity(0.05)
+                                ? Color.white
+                                : Theme.background
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .shadow(color: profileVM.profile.skinTone == tone ? Theme.shadowMedium : .clear, radius: 8, y: 4)
                     }
                 }
             }
@@ -266,15 +259,15 @@ struct OnboardingView: View {
         VStack(spacing: 24) {
             Image(systemName: "figure.arms.open")
                 .font(.system(size: 60))
-                .foregroundStyle(LinearGradient.goldenHour)
+                .foregroundStyle(LinearGradient.sunshineYellow)
             
             Text("Body Type")
                 .font(.title.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             Text("For the perfect silhouette preview")
                 .font(.body)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(Theme.textSecondary)
             
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
                 ForEach(BodyType.allCases, id: \.self) { type in
@@ -287,15 +280,16 @@ struct OnboardingView: View {
                             Text(type.rawValue)
                                 .font(.callout.weight(.medium))
                         }
-                        .foregroundColor(profileVM.profile.bodyType == type ? .white : .white.opacity(0.5))
+                        .foregroundColor(profileVM.profile.bodyType == type ? .white : Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 20)
                         .background(
                             profileVM.profile.bodyType == type
-                                ? AnyShapeStyle(LinearGradient.cosmicAccent)
-                                : AnyShapeStyle(Color.white.opacity(0.08))
+                                ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                                : AnyShapeStyle(Color.white)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(color: profileVM.profile.bodyType == type ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 8, y: 4)
                     }
                 }
             }

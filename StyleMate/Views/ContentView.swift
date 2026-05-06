@@ -6,10 +6,11 @@ struct ContentView: View {
     @StateObject private var outfitVM = OutfitViewModel()
     
     @State private var selectedTab = 0
+    @Namespace private var animation
     
     var body: some View {
         ZStack {
-            CosmicBackground()
+            VibrantBackground()
             
             if !profileVM.isOnboardingComplete {
                 OnboardingView(profileVM: profileVM)
@@ -20,7 +21,6 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.5), value: profileVM.isOnboardingComplete)
-        .preferredColorScheme(.dark)
     }
     
     // MARK: - Tab View
@@ -35,7 +35,7 @@ struct ContentView: View {
                 case 1:
                     WardrobeView(wardrobeVM: wardrobeVM)
                 case 2:
-                    WeeklyPlannerView(profileVM: profileVM, wardrobeVM: wardrobeVM, outfitVM: outfitVM)
+                    AvatarTabView(profileVM: profileVM, wardrobeVM: wardrobeVM, outfitVM: outfitVM)
                 case 3:
                     HistoryView(profileVM: profileVM, outfitVM: outfitVM, wardrobeVM: wardrobeVM)
                 default:
@@ -51,57 +51,51 @@ struct ContentView: View {
     // MARK: - Custom Tab Bar
     
     private var customTabBar: some View {
-        HStack {
-            tabItem(icon: "sparkles", label: "Today", index: 0)
-            tabItem(icon: "hanger", label: "Wardrobe", index: 1)
-            tabItem(icon: "calendar", label: "Planner", index: 2)
-            tabItem(icon: "clock.arrow.circlepath", label: "History", index: 3)
+        HStack(spacing: 0) {
+            tabItem(icon: "sparkles", activeIcon: "sparkles", label: "Today", index: 0)
+            tabItem(icon: "tshirt", activeIcon: "tshirt.fill", label: "Wardrobe", index: 1)
+            tabItem(icon: "cube", activeIcon: "cube.fill", label: "3D Me", index: 2)
+            tabItem(icon: "clock.arrow.circlepath", activeIcon: "clock.arrow.circlepath", label: "History", index: 3)
         }
         .padding(.horizontal, 8)
-        .padding(.top, 12)
-        .padding(.bottom, 28)
+        .padding(.vertical, 8)
         .background(
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    Rectangle()
-                        .fill(Color(red: 0.05, green: 0.02, blue: 0.15).opacity(0.5))
-                )
-                .overlay(alignment: .top) {
-                    Rectangle()
-                        .fill(Color.white.opacity(0.08))
-                        .frame(height: 0.5)
-                }
-                .ignoresSafeArea()
+            Capsule()
+                .fill(Color.white)
+                .shadow(color: Theme.shadowMedium, radius: 20, x: 0, y: 10)
         )
+        .padding(.horizontal, 24)
+        .padding(.bottom, 20)
     }
     
-    private func tabItem(icon: String, label: String, index: Int) -> some View {
+    private func tabItem(icon: String, activeIcon: String, label: String, index: Int) -> some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
+            let impact = UIImpactFeedbackGenerator(style: .light)
+            impact.impactOccurred()
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                 selectedTab = index
             }
         } label: {
             VStack(spacing: 4) {
-                Image(systemName: selectedTab == index ? icon + (icon == "hanger" || icon == "calendar" ? "" : "") : icon)
-                    .font(.system(size: 22))
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundColor(
-                        selectedTab == index
-                            ? Color(red: 0.7, green: 0.4, blue: 1.0)
-                            : .white.opacity(0.4)
-                    )
-                    .scaleEffect(selectedTab == index ? 1.1 : 1.0)
+                Image(systemName: selectedTab == index ? activeIcon : icon)
+                    .font(.system(size: 22, weight: selectedTab == index ? .semibold : .regular))
+                    .foregroundColor(selectedTab == index ? Theme.accentRed : Theme.textMuted)
                 
                 Text(label)
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(
-                        selectedTab == index
-                            ? Color(red: 0.7, green: 0.4, blue: 1.0)
-                            : .white.opacity(0.4)
-                    )
+                    .font(.system(size: 11, weight: selectedTab == index ? .bold : .medium, design: .rounded))
+                    .foregroundColor(selectedTab == index ? Theme.accentRed : Theme.textMuted)
             }
+            .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
+            .background(
+                ZStack {
+                    if selectedTab == index {
+                        Capsule()
+                            .fill(Theme.accentRed.opacity(0.10))
+                            .matchedGeometryEffect(id: "TAB_BACKGROUND", in: animation)
+                    }
+                }
+            )
         }
     }
 }

@@ -36,19 +36,19 @@ struct HistoryView: View {
                 VStack(spacing: 8) {
                     Text("Style History")
                         .font(.title.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textPrimary)
                     
                     if streakCount > 0 {
                         HStack(spacing: 6) {
                             Image(systemName: "flame.fill")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Theme.accentOrange)
                             Text("\(streakCount) day streak!")
                                 .font(.callout.weight(.semibold))
-                                .foregroundColor(.orange)
+                                .foregroundColor(Theme.accentOrange)
                         }
                         .padding(.horizontal, 14)
                         .padding(.vertical, 6)
-                        .background(Color.orange.opacity(0.15))
+                        .background(Theme.accentOrange.opacity(0.10))
                         .clipShape(Capsule())
                     }
                 }
@@ -57,7 +57,7 @@ struct HistoryView: View {
                 // Month Label
                 Text(currentMonth)
                     .font(.headline)
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(Theme.textSecondary)
                 
                 // Calendar Grid
                 calendarGrid
@@ -85,7 +85,7 @@ struct HistoryView: View {
                 ForEach(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], id: \.self) { day in
                     Text(day)
                         .font(.caption2.weight(.medium))
-                        .foregroundColor(.white.opacity(0.4))
+                        .foregroundColor(Theme.textMuted)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -113,11 +113,11 @@ struct HistoryView: View {
                                 VStack(spacing: 2) {
                                     Text("\(date.dayNumber)")
                                         .font(.caption.weight(isToday ? .bold : .regular))
-                                        .foregroundColor(isToday ? .white : .white.opacity(0.7))
+                                        .foregroundColor(isToday ? Theme.accentRed : Theme.textPrimary)
                                     
                                     if hasOutfit {
                                         Circle()
-                                            .fill(Color(red: 0.6, green: 0.3, blue: 0.9))
+                                            .fill(Theme.accentGreen)
                                             .frame(width: 5, height: 5)
                                     } else {
                                         Circle()
@@ -129,9 +129,9 @@ struct HistoryView: View {
                                 .padding(.vertical, 8)
                                 .background(
                                     isSelected
-                                        ? Color(red: 0.6, green: 0.3, blue: 0.9).opacity(0.3)
+                                        ? Theme.accentRed.opacity(0.10)
                                         : isToday
-                                            ? Color.white.opacity(0.08)
+                                            ? Theme.accentRed.opacity(0.05)
                                             : Color.clear
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -155,7 +155,7 @@ struct HistoryView: View {
         VStack(spacing: 12) {
             Text(date.dayOfWeekName + ", " + AstrologyEngine.formattedDate(date))
                 .font(.callout.weight(.semibold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             
             if let outfit = outfitVM.outfit(for: date) {
                 VStack(spacing: 8) {
@@ -175,7 +175,7 @@ struct HistoryView: View {
             } else {
                 Text("No outfit logged for this day")
                     .font(.callout)
-                    .foregroundColor(.white.opacity(0.4))
+                    .foregroundColor(Theme.textMuted)
             }
         }
         .padding(16)
@@ -187,10 +187,10 @@ struct HistoryView: View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.caption)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(Theme.textMuted)
             Text(name)
                 .font(.callout)
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             Spacer()
             Circle()
                 .fill(color.color)
@@ -203,25 +203,32 @@ struct HistoryView: View {
     private var profileCard: some View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
-                Image(systemName: profileVM.profile.gender.icon)
-                    .font(.title)
-                    .foregroundStyle(LinearGradient.cosmicAccent)
+                // Avatar
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient.vibrantAccent)
+                        .frame(width: 44, height: 44)
+                    
+                    Image(systemName: profileVM.profile.gender.icon)
+                        .font(.body)
+                        .foregroundColor(.white)
+                }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(profileVM.profile.name)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textPrimary)
                     
                     HStack(spacing: 4) {
                         Text(profileVM.profile.zodiacSign.symbol)
                         Text(profileVM.profile.zodiacSign.rawValue)
                             .font(.caption)
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(Theme.textSecondary)
                         Text("•")
-                            .foregroundColor(.white.opacity(0.3))
+                            .foregroundColor(Theme.textMuted)
                         Text(profileVM.profile.zodiacSign.element)
                             .font(.caption)
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(Theme.textSecondary)
                     }
                 }
                 
@@ -229,27 +236,26 @@ struct HistoryView: View {
             }
             
             Divider()
-                .background(Color.white.opacity(0.1))
             
             HStack {
-                profileStat(label: "Items", value: "\(wardrobeVM.items.count)")
-                profileStat(label: "Outfits", value: "\(outfitVM.history.count)")
-                profileStat(label: "Streak", value: "\(streakCount)")
-                profileStat(label: "Body", value: profileVM.profile.bodyType.rawValue)
+                profileStat(label: "Items", value: "\(wardrobeVM.items.count)", color: Theme.accentBlue)
+                profileStat(label: "Outfits", value: "\(outfitVM.history.count)", color: Theme.accentGreen)
+                profileStat(label: "Streak", value: "\(streakCount)", color: Theme.accentOrange)
+                profileStat(label: "Body", value: profileVM.profile.bodyType.rawValue, color: Theme.accentPurple)
             }
         }
         .padding(16)
         .glassCard()
     }
     
-    private func profileStat(label: String, value: String) -> some View {
+    private func profileStat(label: String, value: String, color: Color) -> some View {
         VStack(spacing: 4) {
             Text(value)
                 .font(.callout.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(color)
             Text(label)
                 .font(.caption2)
-                .foregroundColor(.white.opacity(0.4))
+                .foregroundColor(Theme.textMuted)
         }
         .frame(maxWidth: .infinity)
     }

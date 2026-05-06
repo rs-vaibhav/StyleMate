@@ -98,6 +98,33 @@ enum ZodiacSign: String, CaseIterable, Codable {
     }
 }
 
+// MARK: - Body Photo Position
+
+enum BodyPhotoPosition: Int, CaseIterable, Codable {
+    case front = 0
+    case back = 1
+    case left = 2
+    case right = 3
+    
+    var label: String {
+        switch self {
+        case .front: return "Front"
+        case .back: return "Back"
+        case .left: return "Left"
+        case .right: return "Right"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .front: return "person.fill"
+        case .back: return "person.fill.turn.right"
+        case .left: return "person.fill.turn.left"
+        case .right: return "person.fill.turn.right"
+        }
+    }
+}
+
 // MARK: - User Profile
 
 struct UserProfile: Codable, Equatable {
@@ -106,12 +133,33 @@ struct UserProfile: Codable, Equatable {
     var gender: Gender = .male
     var skinTone: SkinTone = .medium
     var bodyType: BodyType = .average
+    var zodiacOverride: ZodiacSign? = nil
+    var bodyPhotoFilenames: [String?] = [nil, nil, nil, nil] // front, back, left, right
+    var profilePhotoFilename: String? = nil
     
     var zodiacSign: ZodiacSign {
+        if let override = zodiacOverride {
+            return override
+        }
         let calendar = Calendar.current
         let month = calendar.component(.month, from: dateOfBirth)
         let day = calendar.component(.day, from: dateOfBirth)
         return ZodiacSign.from(month: month, day: day)
+    }
+    
+    var autoZodiacSign: ZodiacSign {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: dateOfBirth)
+        let day = calendar.component(.day, from: dateOfBirth)
+        return ZodiacSign.from(month: month, day: day)
+    }
+    
+    var hasBodyPhotos: Bool {
+        bodyPhotoFilenames.contains { $0 != nil }
+    }
+    
+    var bodyPhotoCount: Int {
+        bodyPhotoFilenames.compactMap { $0 }.count
     }
     
     var isComplete: Bool {

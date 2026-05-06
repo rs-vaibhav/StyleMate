@@ -4,6 +4,7 @@ struct WardrobeView: View {
     @ObservedObject var wardrobeVM: WardrobeViewModel
     @State private var selectedCategory: ClothingCategory? = nil
     @State private var showAddItem = false
+    @State private var editingItem: WardrobeItem? = nil
     
     private var filteredItems: [WardrobeItem] {
         if let cat = selectedCategory {
@@ -18,18 +19,18 @@ struct WardrobeView: View {
             VStack(spacing: 12) {
                 Text("My Wardrobe")
                     .font(.title.weight(.bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textPrimary)
                 
                 Text("\(wardrobeVM.items.count) items")
                     .font(.callout)
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(Theme.textSecondary)
                 
                 // Category Stats
                 HStack(spacing: 12) {
-                    statBadge(icon: "tshirt.fill", count: wardrobeVM.topCount, label: "Tops")
-                    statBadge(icon: "rectangle.split.1x2.fill", count: wardrobeVM.bottomCount, label: "Bottoms")
-                    statBadge(icon: "shoeprints.fill", count: wardrobeVM.footwearCount, label: "Shoes")
-                    statBadge(icon: "sparkles", count: wardrobeVM.accessoryCount, label: "Acc.")
+                    statBadge(icon: "tshirt.fill", count: wardrobeVM.topCount, label: "Tops", color: Theme.accentRed)
+                    statBadge(icon: "rectangle.split.1x2.fill", count: wardrobeVM.bottomCount, label: "Bottoms", color: Theme.accentBlue)
+                    statBadge(icon: "shoeprints.fill", count: wardrobeVM.footwearCount, label: "Shoes", color: Theme.accentGreen)
+                    statBadge(icon: "sparkles", count: wardrobeVM.accessoryCount, label: "Acc.", color: Theme.accentYellow)
                 }
             }
             .padding(.horizontal, 16)
@@ -69,6 +70,9 @@ struct WardrobeView: View {
                     ) {
                         ForEach(filteredItems) { item in
                             wardrobeItemCard(item)
+                                .onTapGesture {
+                                    editingItem = item
+                                }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -86,10 +90,10 @@ struct WardrobeView: View {
                     .foregroundColor(.white)
                     .frame(width: 56, height: 56)
                     .background(
-                        LinearGradient.cosmicAccent
+                        LinearGradient.vibrantAccent
                     )
                     .clipShape(Circle())
-                    .shadow(color: Color(red: 0.5, green: 0.2, blue: 0.9).opacity(0.5), radius: 12, y: 4)
+                    .shadow(color: Theme.accentRed.opacity(0.4), radius: 12, y: 4)
             }
             .padding(.trailing, 20)
             .padding(.bottom, 90)
@@ -97,21 +101,24 @@ struct WardrobeView: View {
         .sheet(isPresented: $showAddItem) {
             AddItemView(wardrobeVM: wardrobeVM)
         }
+        .sheet(item: $editingItem) { item in
+            EditItemView(wardrobeVM: wardrobeVM, item: item)
+        }
     }
     
     // MARK: - Components
     
-    private func statBadge(icon: String, count: Int, label: String) -> some View {
+    private func statBadge(icon: String, count: Int, label: String, color: Color) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon)
                 .font(.caption)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(color)
             Text("\(count)")
                 .font(.callout.weight(.bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textPrimary)
             Text(label)
                 .font(.caption2)
-                .foregroundColor(.white.opacity(0.4))
+                .foregroundColor(Theme.textMuted)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
@@ -128,43 +135,53 @@ struct WardrobeView: View {
                 Text(label)
                     .font(.caption.weight(.semibold))
             }
-            .foregroundColor(isSelected ? .white : .white.opacity(0.5))
+            .foregroundColor(isSelected ? .white : Theme.textSecondary)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
                 isSelected
-                    ? AnyShapeStyle(LinearGradient.cosmicAccent)
-                    : AnyShapeStyle(Color.white.opacity(0.08))
+                    ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                    : AnyShapeStyle(Color.white)
             )
             .clipShape(Capsule())
+            .shadow(color: isSelected ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
         }
     }
     
     private func wardrobeItemCard(_ item: WardrobeItem) -> some View {
         VStack(spacing: 10) {
             // Photo or color swatch
-            if let filename = item.photoFilename,
-               let image = wardrobeVM.loadPhoto(filename: filename) {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            } else {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(item.color.color)
-                    .frame(height: 120)
-                    .overlay(
-                        Image(systemName: item.category.icon)
-                            .font(.system(size: 30))
-                            .foregroundColor(item.color.needsDarkText ? .black.opacity(0.3) : .white.opacity(0.3))
-                    )
+            ZStack(alignment: .topTrailing) {
+                if let filename = item.photoFilename,
+                   let image = wardrobeVM.loadPhoto(filename: filename) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 120)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                } else {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(item.color.color)
+                        .frame(height: 120)
+                        .overlay(
+                            Image(systemName: item.category.icon)
+                                .font(.system(size: 30))
+                                .foregroundColor(item.color.needsDarkText ? .black.opacity(0.2) : .white.opacity(0.3))
+                        )
+                }
+                
+                // Edit badge
+                Image(systemName: "pencil.circle.fill")
+                    .font(.body)
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.3), radius: 3)
+                    .padding(6)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.name)
                     .font(.callout.weight(.medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textPrimary)
                     .lineLimit(1)
                 
                 HStack(spacing: 6) {
@@ -174,13 +191,13 @@ struct WardrobeView: View {
                     
                     Text(item.color.displayName)
                         .font(.caption2)
-                        .foregroundColor(.white.opacity(0.5))
+                        .foregroundColor(Theme.textMuted)
                     
                     Spacer()
                     
-                    Text(item.occasion.rawValue)
+                    Text(item.category.rawValue)
                         .font(.caption2)
-                        .foregroundColor(.white.opacity(0.4))
+                        .foregroundColor(Theme.textMuted)
                 }
             }
             .padding(.horizontal, 4)
@@ -188,6 +205,12 @@ struct WardrobeView: View {
         .padding(10)
         .glassCard(cornerRadius: 16)
         .contextMenu {
+            Button {
+                editingItem = item
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            
             Button(role: .destructive) {
                 wardrobeVM.deleteItem(item)
             } label: {
@@ -200,15 +223,15 @@ struct WardrobeView: View {
         VStack(spacing: 16) {
             Image(systemName: "hanger")
                 .font(.system(size: 50))
-                .foregroundColor(.white.opacity(0.2))
+                .foregroundColor(Theme.textMuted)
             
             Text(selectedCategory != nil ? "No \(selectedCategory!.rawValue) items yet" : "Your wardrobe is empty")
                 .font(.headline)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(Theme.textSecondary)
             
             Text("Tap + to add your first item")
                 .font(.callout)
-                .foregroundColor(.white.opacity(0.3))
+                .foregroundColor(Theme.textMuted)
         }
     }
 }

@@ -12,7 +12,7 @@ struct BodySilhouetteView: View {
             Ellipse()
                 .fill(
                     RadialGradient(
-                        colors: [topColor.opacity(0.15), .clear],
+                        colors: [topColor.opacity(0.10), .clear],
                         center: .center,
                         startRadius: 20,
                         endRadius: 150
@@ -44,7 +44,7 @@ struct BodySilhouetteView: View {
                         path.addLine(to: CGPoint(x: 45, y: 12))
                         path.addLine(to: CGPoint(x: 55, y: 0))
                     }
-                    .stroke(topColor == .white ? Color.gray.opacity(0.3) : Color.white.opacity(0.2), lineWidth: 1.5)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 1.5)
                     .frame(width: 90, height: 85)
                 }
                 
@@ -56,7 +56,7 @@ struct BodySilhouetteView: View {
                         .clipShape(Capsule())
                 } else {
                     Rectangle()
-                        .fill(Color.white.opacity(0.1))
+                        .fill(Theme.cardBorder)
                         .frame(width: 80, height: 4)
                         .clipShape(Capsule())
                 }

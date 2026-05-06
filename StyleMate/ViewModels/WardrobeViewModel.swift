@@ -30,6 +30,12 @@ class WardrobeViewModel: ObservableObject {
         items.append(item)
     }
     
+    func updateItem(_ item: WardrobeItem) {
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items[index] = item
+        }
+    }
+    
     func deleteItem(_ item: WardrobeItem) {
         items.removeAll { $0.id == item.id }
         // Delete photo if exists

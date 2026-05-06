@@ -5,40 +5,28 @@ struct AddItemView: View {
     @ObservedObject var wardrobeVM: WardrobeViewModel
     @Environment(\.dismiss) private var dismiss
     
-    @State private var name = ""
     @State private var category: ClothingCategory = .top
-    @State private var selectedColor: AppColor = .blue
-    @State private var occasion: Occasion = .casual
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var photoImage: UIImage?
+    @State private var extractedImage: UIImage?  // ML-extracted clothing (no background)
+    @State private var detectedColor: AppColor = .blue
+    @State private var isAnalyzing = false
     
     var body: some View {
         NavigationView {
             ZStack {
-                Color(red: 0.08, green: 0.05, blue: 0.18)
+                Theme.background
                     .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 24) {
-                        // Photo Section
+                    VStack(spacing: 28) {
+                        // Photo Section — THE main input
                         photoSection
-                        
-                        // Name
-                        VStack(alignment: .leading, spacing: 8) {
-                            sectionLabel("Item Name")
-                            TextField("e.g. Navy Blue Polo", text: $name)
-                                .font(.body)
-                                .padding()
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                                .foregroundColor(.white)
-                                .accentColor(Color(red: 0.6, green: 0.3, blue: 0.9))
-                        }
                         
                         // Category
                         VStack(alignment: .leading, spacing: 8) {
-                            sectionLabel("Category")
+                            sectionLabel("What is it?")
                             HStack(spacing: 10) {
                                 ForEach(ClothingCategory.allCases, id: \.self) { cat in
                                     Button {
@@ -50,52 +38,53 @@ struct AddItemView: View {
                                             Text(cat.rawValue)
                                                 .font(.caption2.weight(.medium))
                                         }
-                                        .foregroundColor(category == cat ? .white : .white.opacity(0.4))
+                                        .foregroundColor(category == cat ? .white : Theme.textSecondary)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 14)
                                         .background(
                                             category == cat
-                                                ? AnyShapeStyle(LinearGradient.cosmicAccent)
-                                                : AnyShapeStyle(Color.white.opacity(0.06))
+                                                ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                                                : AnyShapeStyle(Color.white)
                                         )
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: category == cat ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
                                     }
                                 }
                             }
                         }
                         
-                        // Color Picker
-                        VStack(alignment: .leading, spacing: 8) {
-                            sectionLabel("Color")
-                            colorPickerGrid
-                        }
-                        
-                        // Occasion
-                        VStack(alignment: .leading, spacing: 8) {
-                            sectionLabel("Occasion")
-                            HStack(spacing: 10) {
-                                ForEach(Occasion.allCases, id: \.self) { occ in
-                                    Button {
-                                        occasion = occ
-                                    } label: {
-                                        VStack(spacing: 6) {
-                                            Image(systemName: occ.icon)
-                                                .font(.body)
-                                            Text(occ.rawValue)
-                                                .font(.caption2.weight(.medium))
-                                        }
-                                        .foregroundColor(occasion == occ ? .white : .white.opacity(0.4))
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
-                                        .background(
-                                            occasion == occ
-                                                ? AnyShapeStyle(LinearGradient.cosmicAccent)
-                                                : AnyShapeStyle(Color.white.opacity(0.06))
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    }
+                        // Detected color preview (read-only info)
+                        if photoImage != nil {
+                            HStack(spacing: 12) {
+                                Circle()
+                                    .fill(detectedColor.color)
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.white, lineWidth: 2)
+                                    )
+                                    .shadow(color: detectedColor.color.opacity(0.3), radius: 4)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Detected Color")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundColor(Theme.textSecondary)
+                                    Text(detectedColor.displayName)
+                                        .font(.callout.weight(.bold))
+                                        .foregroundColor(Theme.textPrimary)
                                 }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.title3)
+                                    .foregroundColor(Theme.accentGreen)
                             }
+                            .padding(14)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .shadow(color: Theme.shadowLight, radius: 4, y: 2)
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
                         }
                         
                         // Save Button
@@ -111,13 +100,13 @@ struct AddItemView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
                             .background(
-                                LinearGradient.cosmicAccent
+                                LinearGradient.vibrantAccent
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(color: Color(red: 0.5, green: 0.2, blue: 0.9).opacity(0.4), radius: 10, y: 4)
+                            .shadow(color: Theme.accentRed.opacity(0.4), radius: 10, y: 4)
                         }
-                        .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
-                        .opacity(name.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+                        .disabled(photoImage == nil)
+                        .opacity(photoImage == nil ? 0.4 : 1)
                         
                         Spacer(minLength: 40)
                     }
@@ -132,86 +121,121 @@ struct AddItemView: View {
                     Button("Cancel") {
                         dismiss()
                     }
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(Theme.textSecondary)
                 }
             }
-            .toolbarColorScheme(.dark, for: .navigationBar)
         }
-        .preferredColorScheme(.dark)
     }
     
     // MARK: - Photo Section
     
     private var photoSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 14) {
             if let image = photoImage {
+                // Show the uploaded photo large
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(height: 180)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-            } else {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(selectedColor.color.opacity(0.3))
-                    .frame(height: 180)
-                    .overlay(
-                        VStack(spacing: 8) {
-                            Image(systemName: "camera.fill")
-                                .font(.title)
-                                .foregroundColor(.white.opacity(0.4))
-                            Text("Add Photo (Optional)")
-                                .font(.caption)
-                                .foregroundColor(.white.opacity(0.3))
+                    .frame(height: 240)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(color: Theme.shadowMedium, radius: 12, x: 0, y: 6)
+                    .overlay(alignment: .topTrailing) {
+                        // Analyzing indicator
+                        if isAnalyzing {
+                            HStack(spacing: 6) {
+                                ProgressView()
+                                    .tint(.white)
+                                Text("Analyzing...")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundColor(.white)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                            .padding(10)
                         }
-                    )
-            }
-            
-            PhotosPicker(
-                selection: $selectedPhotoItem,
-                matching: .images
-            ) {
-                HStack {
-                    Image(systemName: "photo.on.rectangle")
-                    Text(photoImage == nil ? "Choose Photo" : "Change Photo")
+                    }
+                
+                // Change photo
+                PhotosPicker(
+                    selection: $selectedPhotoItem,
+                    matching: .images
+                ) {
+                    HStack {
+                        Image(systemName: "arrow.triangle.2.circlepath.camera")
+                        Text("Change Photo")
+                    }
+                    .font(.callout.weight(.medium))
+                    .foregroundColor(Theme.accentBlue)
                 }
-                .font(.callout.weight(.medium))
-                .foregroundColor(Color(red: 0.6, green: 0.3, blue: 0.9))
+            } else {
+                // Empty state — big prompt to upload
+                PhotosPicker(
+                    selection: $selectedPhotoItem,
+                    matching: .images
+                ) {
+                    VStack(spacing: 16) {
+                        ZStack {
+                            Circle()
+                                .fill(Theme.accentBlue.opacity(0.08))
+                                .frame(width: 80, height: 80)
+                            
+                            Image(systemName: "camera.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(Theme.accentBlue)
+                        }
+                        
+                        Text("Upload Clothing Photo")
+                            .font(.title3.weight(.bold))
+                            .foregroundColor(Theme.textPrimary)
+                        
+                        Text("Take a photo or pick from gallery\nThe app will detect the color automatically")
+                            .font(.caption)
+                            .foregroundColor(Theme.textMuted)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 240)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Theme.accentBlue.opacity(0.04))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .strokeBorder(style: StrokeStyle(lineWidth: 2.5, dash: [10]))
+                                    .foregroundColor(Theme.accentBlue.opacity(0.25))
+                            )
+                    )
+                }
             }
-            .onChange(of: selectedPhotoItem) { newItem in
-                Task {
-                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+        }
+        .onChange(of: selectedPhotoItem) { newItem in
+            Task {
+                if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                    await MainActor.run {
                         photoData = data
                         photoImage = UIImage(data: data)
+                        analyzePhoto()
                     }
                 }
             }
         }
     }
     
-    // MARK: - Color Picker Grid
+    // MARK: - Analyze Photo (Vision ML extraction)
     
-    private var colorPickerGrid: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
-            ForEach(AppColor.allCases) { color in
-                Button {
-                    selectedColor = color
-                } label: {
-                    Circle()
-                        .fill(color.color)
-                        .frame(width: 36, height: 36)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: selectedColor == color ? 3 : 0)
-                        )
-                        .overlay(
-                            selectedColor == color
-                                ? Image(systemName: "checkmark")
-                                    .font(.caption.weight(.bold))
-                                    .foregroundColor(color.needsDarkText ? .black : .white)
-                                : nil
-                        )
-                        .shadow(color: selectedColor == color ? color.color.opacity(0.5) : .clear, radius: 6)
-                }
+    private func analyzePhoto() {
+        guard let image = photoImage else { return }
+        isAnalyzing = true
+        
+        // Step 1: Extract clothing from background using Vision ML
+        ClothingExtractor.extractClothing(from: image) { extracted in
+            withAnimation(.spring(response: 0.4)) {
+                // Use extracted image if available, otherwise original
+                self.extractedImage = extracted
+                let analyzeImg = extracted ?? image
+                self.detectedColor = ImageColorExtractor.dominantAppColor(from: analyzeImg)
+                self.isAnalyzing = false
             }
         }
     }
@@ -219,16 +243,18 @@ struct AddItemView: View {
     // MARK: - Save
     
     private func saveItem() {
-        var filename: String? = nil
-        if let data = photoData {
-            filename = wardrobeVM.savePhoto(data)
-        }
+        // Save the ML-extracted clothing image (no background) for 3D texturing
+        let saveImage = extractedImage ?? photoImage
+        guard let img = saveImage, let data = img.pngData() ?? img.jpegData(compressionQuality: 0.9) else { return }
+        
+        let filename = wardrobeVM.savePhoto(data)
+        let autoName = ImageColorExtractor.autoName(color: detectedColor, category: category)
         
         let item = WardrobeItem(
-            name: name.trimmingCharacters(in: .whitespaces),
+            name: autoName,
             category: category,
-            color: selectedColor,
-            occasion: occasion,
+            color: detectedColor,
+            occasion: .casual,
             photoFilename: filename
         )
         
@@ -239,6 +265,6 @@ struct AddItemView: View {
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
             .font(.callout.weight(.semibold))
-            .foregroundColor(.white.opacity(0.7))
+            .foregroundColor(Theme.textSecondary)
     }
 }

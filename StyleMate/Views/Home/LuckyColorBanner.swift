@@ -11,7 +11,7 @@ struct LuckyColorBanner: View {
                     .font(.title3)
                 Text("Ruled by \(planet.name)")
                     .font(.callout.weight(.medium))
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(Theme.textSecondary)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -23,13 +23,13 @@ struct LuckyColorBanner: View {
                                 .frame(width: 44, height: 44)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.white.opacity(0.3), lineWidth: 1.5)
+                                        .stroke(Color.white, lineWidth: 2)
                                 )
-                                .shadow(color: appColor.color.opacity(0.5), radius: 8)
+                                .shadow(color: appColor.color.opacity(0.4), radius: 6)
                             
                             Text(appColor.displayName)
                                 .font(.caption2.weight(.medium))
-                                .foregroundColor(.white.opacity(0.7))
+                                .foregroundColor(Theme.textSecondary)
                         }
                         .padding(.vertical, 4)
                     }
