@@ -152,6 +152,34 @@ struct EditItemView: View {
                             }
                         }
                         
+                        // Smart Pairings
+                        VStack(alignment: .leading, spacing: 12) {
+                            sectionLabel("Matches beautifully with")
+                            
+                            HStack(spacing: 12) {
+                                ForEach(selectedColor.complementaryColors, id: \.self) { compColor in
+                                    VStack(spacing: 4) {
+                                        Circle()
+                                            .fill(compColor.color)
+                                            .frame(width: 36, height: 36)
+                                            .overlay(Circle().stroke(Theme.cardBorder, lineWidth: 1))
+                                            .shadow(color: compColor.color.opacity(0.2), radius: 4, y: 2)
+                                        
+                                        Text(compColor.displayName)
+                                            .font(.system(size: 10, weight: .medium))
+                                            .foregroundColor(Theme.textSecondary)
+                                            .multilineTextAlignment(.center)
+                                            .lineLimit(1)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
+                            }
+                            .padding(16)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(color: Theme.shadowLight, radius: 4, y: 2)
+                        }
+                        
                         // Save Button
                         Button {
                             saveChanges()

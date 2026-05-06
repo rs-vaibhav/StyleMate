@@ -39,6 +39,9 @@ struct ProfileSettingsView: View {
                         BodyPhotoUploadView(profileVM: profileVM)
                         .padding(.horizontal, 16)
                         
+                        // App Icon
+                        appIconSection
+                        
                         // Danger Zone
                         dangerZone
                         
@@ -341,6 +344,51 @@ struct ProfileSettingsView: View {
         }
         .padding(16)
         .glassCard()
+        .padding(.horizontal, 16)
+    }
+    
+    // MARK: - App Icon Section
+    
+    private var appIconSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            sectionHeader(icon: "app.dashed", title: "App Icon", color: Theme.accentBlue)
+            
+            VStack(spacing: 0) {
+                ForEach(AppIconStyle.allCases, id: \.self) { style in
+                    Button {
+                        AppIconManager.shared.changeIcon(to: style)
+                    } label: {
+                        HStack {
+                            Text(style.rawValue)
+                                .font(.body.weight(.medium))
+                                .foregroundColor(Theme.textPrimary)
+                            
+                            Spacer()
+                            
+                            if AppIconManager.shared.currentIcon == style {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(Theme.accentRed)
+                            }
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    if style != AppIconStyle.allCases.last {
+                        Divider()
+                            .padding(.leading, 20)
+                    }
+                }
+            }
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: Theme.shadowLight, radius: 4, y: 2)
+            
+            Text("Note: Changing the icon requires the icon files to be loaded into the Xcode Assets catalog.")
+                .font(.caption2)
+                .foregroundColor(Theme.textMuted)
+                .padding(.horizontal, 4)
+        }
         .padding(.horizontal, 16)
     }
     

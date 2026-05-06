@@ -109,6 +109,33 @@ enum AppColor: String, CaseIterable, Codable, Identifiable {
             return false
         }
     }
+    
+    // MARK: - Smart Color Pairings
+    
+    var complementaryColors: [AppColor] {
+        switch self {
+        case .black, .white, .grey, .silver:
+            return [.red, .blue, .green, .brown]
+        case .red, .maroon, .rose:
+            return [.navy, .black, .white, .beige]
+        case .blue, .navy, .lightBlue:
+            return [.beige, .cream, .grey, .black]
+        case .green, .emerald, .mint:
+            return [.white, .black, .navy, .beige]
+        case .yellow, .gold, .mustard:
+            return [.navy, .black, .white, .brown]
+        case .pink, .coral:
+            return [.navy, .grey, .white, .black]
+        case .orange, .saffron:
+            return [.navy, .brown, .white, .black]
+        case .purple, .lavender:
+            return [.black, .white, .silver, .cream]
+        case .brown, .beige, .khaki, .cream:
+            return [.navy, .green, .maroon, .black]
+        case .teal:
+            return [.cream, .brown, .black, .white]
+        }
+    }
 }
 
 // MARK: - Wardrobe Item

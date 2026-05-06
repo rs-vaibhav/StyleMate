@@ -11,6 +11,10 @@ struct HomeView: View {
     @State private var currentWeather: WeatherProfile = WeatherService.shared.currentProfile()
     @State private var shareImage: UIImage? = nil
     
+    // Swipe & Confetti State
+    @State private var cardOffset: CGSize = .zero
+    @State private var isConfettiTriggered = false
+    
     private var today: Date { Date() }
     
     private var greetingText: String {
@@ -23,7 +27,8 @@ struct HomeView: View {
     }
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        ZStack {
+            ScrollView(showsIndicators: false) {
             VStack(spacing: 20) {
                 // Top Bar
                 HStack {
@@ -128,6 +133,10 @@ struct HomeView: View {
                 
                 Spacer(minLength: 100)
             }
+            } // Closes ScrollView
+            
+            // Confetti Overlay
+            ConfettiView(isTriggered: $isConfettiTriggered)
         }
         .onAppear {
             if outfitVM.currentSuggestion == nil && !wardrobeVM.items.isEmpty {
@@ -258,11 +267,72 @@ struct HomeView: View {
                     .padding(.top, 4)
                 }
             }
+            
+            // Swipe Overlay Badges
+            HStack {
+                Text("SLAY ✨")
+                    .font(.headline.weight(.heavy))
+                    .padding(8)
+                    .background(Color.green.opacity(0.8))
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+                    .rotationEffect(.degrees(-15))
+                    .opacity(Double(cardOffset.width / 100))
+                
+                Spacer()
+                
+                Text("NEXT ⏭️")
+                    .font(.headline.weight(.heavy))
+                    .padding(8)
+                    .background(Color.red.opacity(0.8))
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+                    .rotationEffect(.degrees(15))
+                    .opacity(Double(-cardOffset.width / 100))
+            }
+            .padding(.top, 20)
+            .padding(.horizontal, 20)
         }
         .padding(20)
         .frame(maxWidth: .infinity)
         .glassCard()
         .padding(.horizontal, 16)
+        .offset(x: cardOffset.width, y: cardOffset.height * 0.2)
+        .rotationEffect(.degrees(Double(cardOffset.width / 20)))
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    if !(outfitVM.currentSuggestion?.confirmed ?? false) {
+                        cardOffset = gesture.translation
+                    }
+                }
+                .onEnded { gesture in
+                    if !(outfitVM.currentSuggestion?.confirmed ?? false) {
+                        if cardOffset.width > 120 {
+                            // Swipe Right -> Slay
+                            let impact = UINotificationFeedbackGenerator()
+                            impact.notificationOccurred(.success)
+                            outfitVM.confirmOutfit()
+                            isConfettiTriggered = true
+                        } else if cardOffset.width < -120 {
+                            // Swipe Left -> Shuffle
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
+                            outfitVM.shuffleSuggestion(
+                                for: today,
+                                profile: profileVM.profile,
+                                wardrobe: wardrobeVM.items,
+                                occasion: selectedOccasion,
+                                weather: currentWeather
+                            )
+                        }
+                        
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                            cardOffset = .zero
+                        }
+                    }
+                }
+        )
     }
     
     private func outfitPhotoGrid(_ suggestion: OutfitSuggestion) -> some View {
@@ -399,6 +469,7 @@ struct HomeView: View {
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.success)
                 outfitVM.confirmOutfit()
+                isConfettiTriggered = true
                 showConfirmation = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     showConfirmation = false
