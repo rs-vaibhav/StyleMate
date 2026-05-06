@@ -1,0 +1,9 @@
+venv/
+uploads/
+outputs/
+__pycache__/
+*.jpg
+*.png
+*.obj
+*.usdz
+models/
