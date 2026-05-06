@@ -54,7 +54,7 @@ struct ContentView: View {
         HStack(spacing: 0) {
             tabItem(icon: "sparkles", activeIcon: "sparkles", label: "Today", index: 0)
             tabItem(icon: "tshirt", activeIcon: "tshirt.fill", label: "Wardrobe", index: 1)
-            tabItem(icon: "cube", activeIcon: "cube.fill", label: "3D Me", index: 2)
+            tabItem(icon: "cube", activeIcon: "cube.fill", label: "Try On", index: 2)
             tabItem(icon: "clock.arrow.circlepath", activeIcon: "clock.arrow.circlepath", label: "History", index: 3)
         }
         .padding(.horizontal, 8)

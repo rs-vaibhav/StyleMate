@@ -361,7 +361,7 @@ struct AvatarTabView: View {
                 .font(.headline.weight(.bold))
                 .foregroundColor(Theme.textPrimary)
             
-            Text("Go to Wardrobe tab and add your real fits\nwith photos to see them on your 3D model")
+            Text("Go to Wardrobe tab and add your real fits\nwith photos to try them on")
                 .font(.caption)
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -435,57 +435,5 @@ struct AvatarTabView: View {
                 if let random = accessories.randomElement() { selectedAccessory = random }
             }
         }
-    }
-    
-    // MARK: - Style Harmony Card
-    
-    private var styleHarmonyCard: some View {
-        HStack(spacing: 12) {
-            // Color harmony visual
-            if let topC = selectedTop?.color, let botC = selectedBottom?.color {
-                HStack(spacing: -6) {
-                    Circle()
-                        .fill(topC.color)
-                        .frame(width: 30, height: 30)
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                    Circle()
-                        .fill(botC.color)
-                        .frame(width: 30, height: 30)
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                    if let fc = selectedFootwear?.color {
-                        Circle()
-                            .fill(fc.color)
-                            .frame(width: 30, height: 30)
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                    }
-                }
-                .shadow(color: .black.opacity(0.08), radius: 4)
-            }
-            
-            VStack(alignment: .leading, spacing: 3) {
-                Text(harmonyLabel)
-                    .font(.callout.weight(.bold))
-                    .foregroundColor(Theme.textPrimary)
-                
-                Text("Color theory match")
-                    .font(.caption2)
-                    .foregroundColor(Theme.textMuted)
-            }
-            
-            Spacer()
-            
-            // Score badge
-            VStack(spacing: 2) {
-                Text("\(matchScore)")
-                    .font(.title2.weight(.black))
-                    .foregroundColor(matchScore > 70 ? Theme.accentGreen : matchScore > 40 ? Theme.accentOrange : Theme.accentRed)
-                Text("score")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(Theme.textMuted)
-            }
-            .frame(width: 50)
-        }
-        .padding(14)
-        .glassCard()
     }
 }

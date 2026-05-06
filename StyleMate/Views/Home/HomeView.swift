@@ -10,13 +10,22 @@ struct HomeView: View {
     
     private var today: Date { Date() }
     
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        let timeGreeting: String
+        if hour < 12 { timeGreeting = "Good morning" }
+        else if hour < 17 { timeGreeting = "Good afternoon" }
+        else { timeGreeting = "Good evening" }
+        return "\(timeGreeting), \(profileVM.profile.name) 👋"
+    }
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 20) {
                 // Top Bar
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Hey, \(profileVM.profile.name) 👋")
+                        Text(greetingText)
                             .font(.title3.weight(.bold))
                             .foregroundColor(Theme.textPrimary)
                         Text("Let's find your look today")
@@ -43,6 +52,7 @@ struct HomeView: View {
                 
                 // Hero Header
                 heroHeader
+                    .fadeIn(delay: 0.1)
                 
                 // Lucky Colors
                 LuckyColorBanner(
@@ -50,19 +60,24 @@ struct HomeView: View {
                     planet: AstrologyEngine.rulingPlanet(for: today)
                 )
                 .padding(.horizontal, 16)
+                .fadeIn(delay: 0.2)
                 
                 // Outfit Suggestion
                 if wardrobeVM.items.isEmpty {
                     emptyWardrobeCard
+                        .fadeIn(delay: 0.3)
                 } else {
                     outfitCard
+                        .fadeIn(delay: 0.3)
                     
                     // Action Buttons
                     actionButtons
+                        .fadeIn(delay: 0.4)
                 }
                 
                 // Daily Tip
                 tipCard
+                    .fadeIn(delay: 0.5)
                 
                 Spacer(minLength: 100)
             }
@@ -166,17 +181,6 @@ struct HomeView: View {
                     }
                 }
                 
-                // Match Score
-                HStack {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(Theme.accentYellow)
-                        .shadow(color: Theme.accentYellow, radius: 5)
-                    Text("Vibe Match: \(suggestion.matchScore)%")
-                        .font(.callout.weight(.bold))
-                        .foregroundColor(suggestion.matchScore > 50 ? Theme.accentGreen : Theme.accentOrange)
-                }
-                .padding(.top, 8)
-                
                 if suggestion.confirmed {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
@@ -207,13 +211,15 @@ struct HomeView: View {
                             Image(uiImage: image)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 80, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .shadow(color: Theme.shadowMedium, radius: 4, y: 2)
+                                .frame(width: 90, height: 110)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .shadow(color: Theme.shadowMedium, radius: 6, y: 3)
                         } else {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(item.color.color.opacity(0.3))
-                                .frame(width: 80, height: 100)
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(
+                                    LinearGradient(colors: [item.color.color.opacity(0.3), item.color.color.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                )
+                                .frame(width: 90, height: 110)
                                 .overlay(
                                     Image(systemName: item.category.icon)
                                         .font(.title3)
@@ -317,9 +323,10 @@ struct HomeView: View {
                     LinearGradient.vibrantAccent
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-                .shadow(color: Theme.accentRed.opacity(0.4), radius: 10, y: 5)
             }
+            .pulsingCTA()
             .disabled(outfitVM.currentSuggestion?.confirmed ?? false)
+            .opacity(outfitVM.currentSuggestion?.confirmed ?? false ? 0.5 : 1)
         }
         .padding(.horizontal, 16)
     }

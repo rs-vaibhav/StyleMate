@@ -68,11 +68,16 @@ struct WardrobeView: View {
                         columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
                         spacing: 12
                     ) {
-                        ForEach(filteredItems) { item in
+                        ForEach(Array(filteredItems.enumerated()), id: \.element.id) { index, item in
                             wardrobeItemCard(item)
                                 .onTapGesture {
                                     editingItem = item
                                 }
+                                .transition(.asymmetric(
+                                    insertion: .scale.combined(with: .opacity),
+                                    removal: .scale.combined(with: .opacity)
+                                ))
+                                .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(Double(index) * 0.04), value: filteredItems.count)
                         }
                     }
                     .padding(.horizontal, 16)

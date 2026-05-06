@@ -158,6 +158,33 @@ struct HistoryView: View {
                 .foregroundColor(Theme.textPrimary)
             
             if let outfit = outfitVM.outfit(for: date) {
+                // Outfit photo strip
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(outfit.allItems) { item in
+                            if let fn = item.photoFilename,
+                               let image = wardrobeVM.loadPhoto(filename: fn) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 60, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .shadow(color: Theme.shadowLight, radius: 3, y: 2)
+                            } else {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(item.color.color.opacity(0.3))
+                                    .frame(width: 60, height: 70)
+                                    .overlay(
+                                        Image(systemName: item.category.icon)
+                                            .font(.caption)
+                                            .foregroundColor(item.color.color)
+                                    )
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 4)
+                }
+                
                 VStack(spacing: 8) {
                     if let top = outfit.top {
                         historyItemRow(icon: "tshirt.fill", name: top.name, color: top.color)
@@ -173,9 +200,18 @@ struct HistoryView: View {
                     }
                 }
             } else {
-                Text("No outfit logged for this day")
-                    .font(.callout)
-                    .foregroundColor(Theme.textMuted)
+                VStack(spacing: 8) {
+                    Image(systemName: "tshirt")
+                        .font(.title2)
+                        .foregroundColor(Theme.textMuted.opacity(0.5))
+                    Text("No outfit logged")
+                        .font(.callout)
+                        .foregroundColor(Theme.textMuted)
+                    Text("Confirm today's outfit on the Home tab")
+                        .font(.caption2)
+                        .foregroundColor(Theme.textMuted.opacity(0.7))
+                }
+                .padding(.vertical, 8)
             }
         }
         .padding(16)

@@ -156,14 +156,26 @@ struct OutfitBoardView: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(
                     LinearGradient(
-                        colors: [fallbackColor.opacity(0.7), fallbackColor],
+                        colors: [fallbackColor.opacity(0.5), fallbackColor.opacity(0.7)],
                         startPoint: .topLeading, endPoint: .bottomTrailing
                     )
                 )
                 .frame(width: width, height: height)
                 .overlay(
-                    Image(systemName: icon)
-                        .font(.system(size: min(width, height) * 0.25))
+                    VStack(spacing: 4) {
+                        Image(systemName: icon)
+                            .font(.system(size: min(width, height) * 0.2))
+                            .foregroundColor(.white.opacity(0.4))
+                        if height > 50 {
+                            Text("Select from wardrobe")
+                                .font(.system(size: 9, weight: .medium))
+                                .foregroundColor(.white.opacity(0.35))
+                        }
+                    }
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
                         .foregroundColor(.white.opacity(0.3))
                 )
                 .shadow(color: shadowColor, radius: 6, x: 0, y: 3)

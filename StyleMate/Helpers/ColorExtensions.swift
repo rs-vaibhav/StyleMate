@@ -258,3 +258,54 @@ extension View {
         buttonStyle(BouncyButtonStyle())
     }
 }
+
+// MARK: - Pulse Animation (for CTAs)
+
+struct PulseModifier: ViewModifier {
+    @State private var isPulsing = false
+    
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isPulsing ? 1.03 : 1.0)
+            .shadow(
+                color: Theme.accentRed.opacity(isPulsing ? 0.4 : 0.2),
+                radius: isPulsing ? 14 : 8,
+                y: isPulsing ? 6 : 4
+            )
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                    isPulsing = true
+                }
+            }
+    }
+}
+
+extension View {
+    func pulsingCTA() -> some View {
+        modifier(PulseModifier())
+    }
+}
+
+// MARK: - Fade In Animation
+
+struct FadeInModifier: ViewModifier {
+    @State private var appeared = false
+    let delay: Double
+    
+    func body(content: Content) -> some View {
+        content
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared ? 0 : 12)
+            .onAppear {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.8).delay(delay)) {
+                    appeared = true
+                }
+            }
+    }
+}
+
+extension View {
+    func fadeIn(delay: Double = 0) -> some View {
+        modifier(FadeInModifier(delay: delay))
+    }
+}
