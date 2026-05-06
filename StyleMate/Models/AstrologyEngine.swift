@@ -77,14 +77,42 @@ struct AstrologyEngine {
         for date: Date,
         profile: UserProfile,
         wardrobe: [WardrobeItem],
-        excluding: [UUID] = []
+        excluding: [UUID] = [],
+        occasion: Occasion = .casual,
+        weather: WeatherProfile? = nil
     ) -> OutfitSuggestion {
         let lucky = luckyColors(for: date, zodiac: profile.zodiacSign)
         
-        let availableTops = wardrobe.filter { $0.category == .top && !excluding.contains($0.id) }
-        let availableBottoms = wardrobe.filter { $0.category == .bottom && !excluding.contains($0.id) }
-        let availableFootwear = wardrobe.filter { $0.category == .footwear && !excluding.contains($0.id) }
-        let availableAccessories = wardrobe.filter { $0.category == .accessory && !excluding.contains($0.id) }
+        // 1. Filter by occasion
+        var filteredWardrobe = wardrobe.filter { $0.occasion == occasion }
+        // Fallback: If no clothes match the occasion, use the full wardrobe
+        if filteredWardrobe.isEmpty {
+            filteredWardrobe = wardrobe
+        }
+        
+        var availableTops = filteredWardrobe.filter { $0.category == .top && !excluding.contains($0.id) }
+        var availableBottoms = filteredWardrobe.filter { $0.category == .bottom && !excluding.contains($0.id) }
+        let availableFootwear = filteredWardrobe.filter { $0.category == .footwear && !excluding.contains($0.id) }
+        let availableAccessories = filteredWardrobe.filter { $0.category == .accessory && !excluding.contains($0.id) }
+        
+        // 2. Filter by weather if available
+        if let weather = weather {
+            if weather.isHot {
+                // Hot weather: prioritize T-shirts, shorts, light clothes
+                let hotTops = availableTops.filter { $0.name.localizedCaseInsensitiveContains("t-shirt") || $0.name.localizedCaseInsensitiveContains("polo") || $0.name.localizedCaseInsensitiveContains("shirt") }
+                if !hotTops.isEmpty { availableTops = hotTops }
+                
+                let hotBottoms = availableBottoms.filter { $0.name.localizedCaseInsensitiveContains("short") || $0.name.localizedCaseInsensitiveContains("skirt") }
+                if !hotBottoms.isEmpty { availableBottoms = hotBottoms }
+            } else if weather.isCold {
+                // Cold weather: prioritize jackets, sweaters, pants
+                let coldTops = availableTops.filter { $0.name.localizedCaseInsensitiveContains("jacket") || $0.name.localizedCaseInsensitiveContains("sweater") || $0.name.localizedCaseInsensitiveContains("hoodie") }
+                if !coldTops.isEmpty { availableTops = coldTops }
+                
+                let coldBottoms = availableBottoms.filter { $0.name.localizedCaseInsensitiveContains("jean") || $0.name.localizedCaseInsensitiveContains("pant") || $0.name.localizedCaseInsensitiveContains("trouser") }
+                if !coldBottoms.isEmpty { availableBottoms = coldBottoms }
+            }
+        }
         
         // Score each item by how well it matches lucky colors
         func scored(_ items: [WardrobeItem]) -> [WardrobeItem] {

@@ -172,4 +172,59 @@ class ClothingExtractor {
         }
         return UIImage(cgImage: cgImage)
     }
+    
+    // MARK: - AI Auto-Tagging
+    
+    /// Analyzes the image using Vision ML to detect the clothing category
+    static func analyzeCategory(from image: UIImage, completion: @escaping (ClothingCategory?) -> Void) {
+        guard let cgImage = image.cgImage else {
+            completion(nil)
+            return
+        }
+        
+        let request = VNClassifyImageRequest { request, error in
+            guard let results = request.results as? [VNClassificationObservation], error == nil else {
+                DispatchQueue.main.async { completion(nil) }
+                return
+            }
+            
+            // Map common Vision classification labels to our ClothingCategory
+            for observation in results where observation.confidence > 0.1 {
+                let identifier = observation.identifier.lowercased()
+                
+                if identifier.contains("shirt") || identifier.contains("jacket") || identifier.contains("sweater") || identifier.contains("top") || identifier.contains("coat") {
+                    DispatchQueue.main.async { completion(.top) }
+                    return
+                }
+                
+                if identifier.contains("pant") || identifier.contains("jean") || identifier.contains("trouser") || identifier.contains("short") || identifier.contains("skirt") {
+                    DispatchQueue.main.async { completion(.bottom) }
+                    return
+                }
+                
+                if identifier.contains("shoe") || identifier.contains("sneaker") || identifier.contains("boot") || identifier.contains("sandal") || identifier.contains("footwear") {
+                    DispatchQueue.main.async { completion(.footwear) }
+                    return
+                }
+                
+                if identifier.contains("watch") || identifier.contains("glasses") || identifier.contains("belt") || identifier.contains("hat") || identifier.contains("accessory") {
+                    DispatchQueue.main.async { completion(.accessory) }
+                    return
+                }
+            }
+            
+            // Default or unknown
+            DispatchQueue.main.async { completion(nil) }
+        }
+        
+        // We don't need highest precision for basic classification
+        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                try handler.perform([request])
+            } catch {
+                DispatchQueue.main.async { completion(nil) }
+            }
+        }
+    }
 }

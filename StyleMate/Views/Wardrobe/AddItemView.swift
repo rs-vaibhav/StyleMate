@@ -6,6 +6,7 @@ struct AddItemView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var category: ClothingCategory = .top
+    @State private var occasion: Occasion = .casual
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var photoImage: UIImage?
@@ -48,6 +49,35 @@ struct AddItemView: View {
                                         )
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                         .shadow(color: category == cat ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Occasion
+                        VStack(alignment: .leading, spacing: 8) {
+                            sectionLabel("Occasion")
+                            HStack(spacing: 10) {
+                                ForEach(Occasion.allCases, id: \.self) { occ in
+                                    Button {
+                                        occasion = occ
+                                    } label: {
+                                        VStack(spacing: 6) {
+                                            Image(systemName: occ.icon)
+                                                .font(.title3)
+                                            Text(occ.rawValue)
+                                                .font(.caption2.weight(.medium))
+                                        }
+                                        .foregroundColor(occasion == occ ? .white : Theme.textSecondary)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 14)
+                                        .background(
+                                            occasion == occ
+                                                ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                                                : AnyShapeStyle(Color.white)
+                                        )
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: occasion == occ ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
                                     }
                                 }
                             }
@@ -228,13 +258,36 @@ struct AddItemView: View {
         guard let image = photoImage else { return }
         isAnalyzing = true
         
-        // Step 1: Extract clothing from background using Vision ML
+        // Parallel tasks for extraction and category classification
+        let group = DispatchGroup()
+        
+        // 1: Extract clothing from background
+        group.enter()
         ClothingExtractor.extractClothing(from: image) { extracted in
-            withAnimation(.spring(response: 0.4)) {
-                // Use extracted image if available, otherwise original
+            DispatchQueue.main.async {
                 self.extractedImage = extracted
                 let analyzeImg = extracted ?? image
                 self.detectedColor = ImageColorExtractor.dominantAppColor(from: analyzeImg)
+                group.leave()
+            }
+        }
+        
+        // 2: Auto-detect Category via Vision ML
+        group.enter()
+        ClothingExtractor.analyzeCategory(from: image) { detectedCategory in
+            DispatchQueue.main.async {
+                if let cat = detectedCategory {
+                    withAnimation {
+                        self.category = cat
+                    }
+                }
+                group.leave()
+            }
+        }
+        
+        // Finish analysis
+        group.notify(queue: .main) {
+            withAnimation(.spring(response: 0.4)) {
                 self.isAnalyzing = false
             }
         }
@@ -254,7 +307,7 @@ struct AddItemView: View {
             name: autoName,
             category: category,
             color: detectedColor,
-            occasion: .casual,
+            occasion: occasion,
             photoFilename: filename
         )
         

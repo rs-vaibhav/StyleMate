@@ -17,19 +17,21 @@ class OutfitViewModel: ObservableObject {
         loadHistory()
     }
     
-    func generateSuggestion(for date: Date, profile: UserProfile, wardrobe: [WardrobeItem]) {
+    func generateSuggestion(for date: Date, profile: UserProfile, wardrobe: [WardrobeItem], occasion: Occasion = .casual, weather: WeatherProfile? = nil) {
         let suggestion = AstrologyEngine.suggestOutfit(
             for: date,
             profile: profile,
             wardrobe: wardrobe,
-            excluding: excludedIDs
+            excluding: excludedIDs,
+            occasion: occasion,
+            weather: weather
         )
         withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
             currentSuggestion = suggestion
         }
     }
     
-    func shuffleSuggestion(for date: Date, profile: UserProfile, wardrobe: [WardrobeItem]) {
+    func shuffleSuggestion(for date: Date, profile: UserProfile, wardrobe: [WardrobeItem], occasion: Occasion = .casual, weather: WeatherProfile? = nil) {
         // Exclude current items to get different ones
         if let current = currentSuggestion {
             excludedIDs.append(contentsOf: current.allItems.map(\.id))
@@ -40,7 +42,7 @@ class OutfitViewModel: ObservableObject {
             excludedIDs = []
         }
         
-        generateSuggestion(for: date, profile: profile, wardrobe: wardrobe)
+        generateSuggestion(for: date, profile: profile, wardrobe: wardrobe, occasion: occasion, weather: weather)
     }
     
     func confirmOutfit() {

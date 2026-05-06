@@ -9,6 +9,7 @@ struct EditItemView: View {
     
     @State private var name: String
     @State private var category: ClothingCategory
+    @State private var occasion: Occasion
     @State private var selectedColor: AppColor
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var photoData: Data?
@@ -21,6 +22,7 @@ struct EditItemView: View {
         self.item = item
         _name = State(initialValue: item.name)
         _category = State(initialValue: item.category)
+        _occasion = State(initialValue: item.occasion)
         _selectedColor = State(initialValue: item.color)
     }
     
@@ -70,6 +72,35 @@ struct EditItemView: View {
                                         )
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                         .shadow(color: category == cat ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Occasion
+                        VStack(alignment: .leading, spacing: 8) {
+                            sectionLabel("Occasion")
+                            HStack(spacing: 10) {
+                                ForEach(Occasion.allCases, id: \.self) { occ in
+                                    Button {
+                                        occasion = occ
+                                    } label: {
+                                        VStack(spacing: 6) {
+                                            Image(systemName: occ.icon)
+                                                .font(.title3)
+                                            Text(occ.rawValue)
+                                                .font(.caption2.weight(.medium))
+                                        }
+                                        .foregroundColor(occasion == occ ? .white : Theme.textSecondary)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 14)
+                                        .background(
+                                            occasion == occ
+                                                ? AnyShapeStyle(LinearGradient.vibrantAccent)
+                                                : AnyShapeStyle(Color.white)
+                                        )
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: occasion == occ ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
                                     }
                                 }
                             }
@@ -282,6 +313,7 @@ struct EditItemView: View {
         var updated = item
         updated.name = name.trimmingCharacters(in: .whitespaces).isEmpty ? ImageColorExtractor.autoName(color: selectedColor, category: category) : name
         updated.category = category
+        updated.occasion = occasion
         updated.color = selectedColor
         
         if photoImage != nil {

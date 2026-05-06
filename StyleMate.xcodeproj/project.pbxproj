@@ -13,30 +13,32 @@
 		AA0000000000000000000203 /* WardrobeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000103; };
 		AA0000000000000000000204 /* OutfitSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000104; };
 		AA0000000000000000000205 /* AstrologyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000105; };
-		AA0000000000000000000206 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000106; };
-		AA0000000000000000000207 /* WardrobeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000107; };
-		AA0000000000000000000208 /* OutfitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000108; };
-		AA0000000000000000000209 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000109; };
-		AA000000000000000000020A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010A; };
-		AA000000000000000000020B /* BodySilhouetteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010B; };
-		AA000000000000000000020C /* LuckyColorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010C; };
-		AA000000000000000000020D /* WardrobeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010D; };
-		AA000000000000000000020E /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010E; };
-		AA000000000000000000020F /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010F; };
-		AA0000000000000000000210 /* WeeklyPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000110; };
-		AA0000000000000000000211 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000111; };
-		AA0000000000000000000212 /* ProfileSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000112; };
-		AA0000000000000000000213 /* BodyPhotoUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000113; };
-		AA0000000000000000000214 /* BodyPhotoCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000114; };
-		AA0000000000000000000215 /* Avatar3DSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000115; };
-		AA0000000000000000000216 /* AvatarTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000116; };
-		AA0000000000000000000217 /* OutfitBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000117; };
-		AA0000000000000000000218 /* ShoppingSuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000118; };
-		AA0000000000000000000219 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000119; };
-		AA000000000000000000021A /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011A; };
-		AA000000000000000000021B /* ImageColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011B; };
-		AA000000000000000000021C /* ClothingExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011C; };
-		AA000000000000000000021D /* StyleMatchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011D; };
+		AA0000000000000000000206 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000106; };
+		AA0000000000000000000207 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000107; };
+		AA0000000000000000000208 /* WardrobeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000108; };
+		AA0000000000000000000209 /* OutfitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000109; };
+		AA000000000000000000020A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010A; };
+		AA000000000000000000020B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010B; };
+		AA000000000000000000020C /* ShareFitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010C; };
+		AA000000000000000000020D /* BodySilhouetteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010D; };
+		AA000000000000000000020E /* LuckyColorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010E; };
+		AA000000000000000000020F /* WardrobeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000010F; };
+		AA0000000000000000000210 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000110; };
+		AA0000000000000000000211 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000111; };
+		AA0000000000000000000212 /* WeeklyPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000112; };
+		AA0000000000000000000213 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000113; };
+		AA0000000000000000000214 /* ProfileSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000114; };
+		AA0000000000000000000215 /* BodyPhotoUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000115; };
+		AA0000000000000000000216 /* BodyPhotoCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000116; };
+		AA0000000000000000000217 /* Avatar3DSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000117; };
+		AA0000000000000000000218 /* AvatarTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000118; };
+		AA0000000000000000000219 /* OutfitBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000119; };
+		AA000000000000000000021A /* ShoppingSuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011A; };
+		AA000000000000000000021B /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011B; };
+		AA000000000000000000021C /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011C; };
+		AA000000000000000000021D /* ImageColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011D; };
+		AA000000000000000000021E /* ClothingExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011E; };
+		AA000000000000000000021F /* StyleMatchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000011F; };
 		AA0000000000000000000302 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000300; };
 		AA0000000000000000000303 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000301; };
 /* End PBXBuildFile section */
@@ -49,30 +51,32 @@
 		AA0000000000000000000103 /* WardrobeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WardrobeItem.swift; sourceTree = "<group>"; };
 		AA0000000000000000000104 /* OutfitSuggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfitSuggestion.swift; sourceTree = "<group>"; };
 		AA0000000000000000000105 /* AstrologyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstrologyEngine.swift; sourceTree = "<group>"; };
-		AA0000000000000000000106 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		AA0000000000000000000107 /* WardrobeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WardrobeViewModel.swift; sourceTree = "<group>"; };
-		AA0000000000000000000108 /* OutfitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfitViewModel.swift; sourceTree = "<group>"; };
-		AA0000000000000000000109 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		AA000000000000000000010A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		AA000000000000000000010B /* BodySilhouetteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodySilhouetteView.swift; sourceTree = "<group>"; };
-		AA000000000000000000010C /* LuckyColorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuckyColorBanner.swift; sourceTree = "<group>"; };
-		AA000000000000000000010D /* WardrobeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WardrobeView.swift; sourceTree = "<group>"; };
-		AA000000000000000000010E /* AddItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemView.swift; sourceTree = "<group>"; };
-		AA000000000000000000010F /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000110 /* WeeklyPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyPlannerView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000111 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000112 /* ProfileSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000113 /* BodyPhotoUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPhotoUploadView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000114 /* BodyPhotoCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPhotoCarouselView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000115 /* Avatar3DSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar3DSceneView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000116 /* AvatarTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarTabView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000117 /* OutfitBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfitBoardView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000118 /* ShoppingSuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingSuggestionsView.swift; sourceTree = "<group>"; };
-		AA0000000000000000000119 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
-		AA000000000000000000011A /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
-		AA000000000000000000011B /* ImageColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageColorExtractor.swift; sourceTree = "<group>"; };
-		AA000000000000000000011C /* ClothingExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClothingExtractor.swift; sourceTree = "<group>"; };
-		AA000000000000000000011D /* StyleMatchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleMatchEngine.swift; sourceTree = "<group>"; };
+		AA0000000000000000000106 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		AA0000000000000000000107 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		AA0000000000000000000108 /* WardrobeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WardrobeViewModel.swift; sourceTree = "<group>"; };
+		AA0000000000000000000109 /* OutfitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfitViewModel.swift; sourceTree = "<group>"; };
+		AA000000000000000000010A /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		AA000000000000000000010B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		AA000000000000000000010C /* ShareFitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareFitCard.swift; sourceTree = "<group>"; };
+		AA000000000000000000010D /* BodySilhouetteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodySilhouetteView.swift; sourceTree = "<group>"; };
+		AA000000000000000000010E /* LuckyColorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuckyColorBanner.swift; sourceTree = "<group>"; };
+		AA000000000000000000010F /* WardrobeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WardrobeView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000110 /* AddItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000111 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000112 /* WeeklyPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyPlannerView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000113 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000114 /* ProfileSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000115 /* BodyPhotoUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPhotoUploadView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000116 /* BodyPhotoCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPhotoCarouselView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000117 /* Avatar3DSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar3DSceneView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000118 /* AvatarTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarTabView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000119 /* OutfitBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfitBoardView.swift; sourceTree = "<group>"; };
+		AA000000000000000000011A /* ShoppingSuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingSuggestionsView.swift; sourceTree = "<group>"; };
+		AA000000000000000000011B /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		AA000000000000000000011C /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		AA000000000000000000011D /* ImageColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageColorExtractor.swift; sourceTree = "<group>"; };
+		AA000000000000000000011E /* ClothingExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClothingExtractor.swift; sourceTree = "<group>"; };
+		AA000000000000000000011F /* StyleMatchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleMatchEngine.swift; sourceTree = "<group>"; };
 		AA0000000000000000000300 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA0000000000000000000301 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,6 +129,7 @@
 				AA0000000000000000000103 /* WardrobeItem.swift */,
 				AA0000000000000000000104 /* OutfitSuggestion.swift */,
 				AA0000000000000000000105 /* AstrologyEngine.swift */,
+				AA0000000000000000000106 /* WeatherService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -132,9 +137,9 @@
 		AA0000000000000000000404 = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000106 /* ProfileViewModel.swift */,
-				AA0000000000000000000107 /* WardrobeViewModel.swift */,
-				AA0000000000000000000108 /* OutfitViewModel.swift */,
+				AA0000000000000000000107 /* ProfileViewModel.swift */,
+				AA0000000000000000000108 /* WardrobeViewModel.swift */,
+				AA0000000000000000000109 /* OutfitViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -157,7 +162,7 @@
 		AA0000000000000000000406 = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000109 /* OnboardingView.swift */,
+				AA000000000000000000010A /* OnboardingView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -165,10 +170,11 @@
 		AA0000000000000000000407 = {
 			isa = PBXGroup;
 			children = (
-				AA000000000000000000010A /* HomeView.swift */,
-				AA000000000000000000010B /* BodySilhouetteView.swift */,
-				AA000000000000000000010C /* LuckyColorBanner.swift */,
-				AA0000000000000000000114 /* BodyPhotoCarouselView.swift */,
+				AA000000000000000000010B /* HomeView.swift */,
+				AA000000000000000000010C /* ShareFitCard.swift */,
+				AA000000000000000000010D /* BodySilhouetteView.swift */,
+				AA000000000000000000010E /* LuckyColorBanner.swift */,
+				AA0000000000000000000116 /* BodyPhotoCarouselView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -176,9 +182,9 @@
 		AA0000000000000000000408 = {
 			isa = PBXGroup;
 			children = (
-				AA000000000000000000010D /* WardrobeView.swift */,
-				AA000000000000000000010E /* AddItemView.swift */,
-				AA000000000000000000010F /* EditItemView.swift */,
+				AA000000000000000000010F /* WardrobeView.swift */,
+				AA0000000000000000000110 /* AddItemView.swift */,
+				AA0000000000000000000111 /* EditItemView.swift */,
 			);
 			path = Wardrobe;
 			sourceTree = "<group>";
@@ -186,7 +192,7 @@
 		AA0000000000000000000409 = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000110 /* WeeklyPlannerView.swift */,
+				AA0000000000000000000112 /* WeeklyPlannerView.swift */,
 			);
 			path = Planner;
 			sourceTree = "<group>";
@@ -194,7 +200,7 @@
 		AA000000000000000000040A = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000111 /* HistoryView.swift */,
+				AA0000000000000000000113 /* HistoryView.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -202,8 +208,8 @@
 		AA000000000000000000040D = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000112 /* ProfileSettingsView.swift */,
-				AA0000000000000000000113 /* BodyPhotoUploadView.swift */,
+				AA0000000000000000000114 /* ProfileSettingsView.swift */,
+				AA0000000000000000000115 /* BodyPhotoUploadView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -211,10 +217,10 @@
 		AA000000000000000000040E = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000115 /* Avatar3DSceneView.swift */,
-				AA0000000000000000000116 /* AvatarTabView.swift */,
-				AA0000000000000000000117 /* OutfitBoardView.swift */,
-				AA0000000000000000000118 /* ShoppingSuggestionsView.swift */,
+				AA0000000000000000000117 /* Avatar3DSceneView.swift */,
+				AA0000000000000000000118 /* AvatarTabView.swift */,
+				AA0000000000000000000119 /* OutfitBoardView.swift */,
+				AA000000000000000000011A /* ShoppingSuggestionsView.swift */,
 			);
 			path = Avatar;
 			sourceTree = "<group>";
@@ -222,11 +228,11 @@
 		AA000000000000000000040B = {
 			isa = PBXGroup;
 			children = (
-				AA0000000000000000000119 /* ColorExtensions.swift */,
-				AA000000000000000000011A /* DateExtensions.swift */,
-				AA000000000000000000011B /* ImageColorExtractor.swift */,
-				AA000000000000000000011C /* ClothingExtractor.swift */,
-				AA000000000000000000011D /* StyleMatchEngine.swift */,
+				AA000000000000000000011B /* ColorExtensions.swift */,
+				AA000000000000000000011C /* DateExtensions.swift */,
+				AA000000000000000000011D /* ImageColorExtractor.swift */,
+				AA000000000000000000011E /* ClothingExtractor.swift */,
+				AA000000000000000000011F /* StyleMatchEngine.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -315,30 +321,32 @@
 				AA0000000000000000000203 /* WardrobeItem.swift in Sources */,
 				AA0000000000000000000204 /* OutfitSuggestion.swift in Sources */,
 				AA0000000000000000000205 /* AstrologyEngine.swift in Sources */,
-				AA0000000000000000000206 /* ProfileViewModel.swift in Sources */,
-				AA0000000000000000000207 /* WardrobeViewModel.swift in Sources */,
-				AA0000000000000000000208 /* OutfitViewModel.swift in Sources */,
-				AA0000000000000000000209 /* OnboardingView.swift in Sources */,
-				AA000000000000000000020A /* HomeView.swift in Sources */,
-				AA000000000000000000020B /* BodySilhouetteView.swift in Sources */,
-				AA000000000000000000020C /* LuckyColorBanner.swift in Sources */,
-				AA000000000000000000020D /* WardrobeView.swift in Sources */,
-				AA000000000000000000020E /* AddItemView.swift in Sources */,
-				AA000000000000000000020F /* EditItemView.swift in Sources */,
-				AA0000000000000000000210 /* WeeklyPlannerView.swift in Sources */,
-				AA0000000000000000000211 /* HistoryView.swift in Sources */,
-				AA0000000000000000000212 /* ProfileSettingsView.swift in Sources */,
-				AA0000000000000000000213 /* BodyPhotoUploadView.swift in Sources */,
-				AA0000000000000000000214 /* BodyPhotoCarouselView.swift in Sources */,
-				AA0000000000000000000215 /* Avatar3DSceneView.swift in Sources */,
-				AA0000000000000000000216 /* AvatarTabView.swift in Sources */,
-				AA0000000000000000000217 /* OutfitBoardView.swift in Sources */,
-				AA0000000000000000000218 /* ShoppingSuggestionsView.swift in Sources */,
-				AA0000000000000000000219 /* ColorExtensions.swift in Sources */,
-				AA000000000000000000021A /* DateExtensions.swift in Sources */,
-				AA000000000000000000021B /* ImageColorExtractor.swift in Sources */,
-				AA000000000000000000021C /* ClothingExtractor.swift in Sources */,
-				AA000000000000000000021D /* StyleMatchEngine.swift in Sources */,
+				AA0000000000000000000206 /* WeatherService.swift in Sources */,
+				AA0000000000000000000207 /* ProfileViewModel.swift in Sources */,
+				AA0000000000000000000208 /* WardrobeViewModel.swift in Sources */,
+				AA0000000000000000000209 /* OutfitViewModel.swift in Sources */,
+				AA000000000000000000020A /* OnboardingView.swift in Sources */,
+				AA000000000000000000020B /* HomeView.swift in Sources */,
+				AA000000000000000000020C /* ShareFitCard.swift in Sources */,
+				AA000000000000000000020D /* BodySilhouetteView.swift in Sources */,
+				AA000000000000000000020E /* LuckyColorBanner.swift in Sources */,
+				AA000000000000000000020F /* WardrobeView.swift in Sources */,
+				AA0000000000000000000210 /* AddItemView.swift in Sources */,
+				AA0000000000000000000211 /* EditItemView.swift in Sources */,
+				AA0000000000000000000212 /* WeeklyPlannerView.swift in Sources */,
+				AA0000000000000000000213 /* HistoryView.swift in Sources */,
+				AA0000000000000000000214 /* ProfileSettingsView.swift in Sources */,
+				AA0000000000000000000215 /* BodyPhotoUploadView.swift in Sources */,
+				AA0000000000000000000216 /* BodyPhotoCarouselView.swift in Sources */,
+				AA0000000000000000000217 /* Avatar3DSceneView.swift in Sources */,
+				AA0000000000000000000218 /* AvatarTabView.swift in Sources */,
+				AA0000000000000000000219 /* OutfitBoardView.swift in Sources */,
+				AA000000000000000000021A /* ShoppingSuggestionsView.swift in Sources */,
+				AA000000000000000000021B /* ColorExtensions.swift in Sources */,
+				AA000000000000000000021C /* DateExtensions.swift in Sources */,
+				AA000000000000000000021D /* ImageColorExtractor.swift in Sources */,
+				AA000000000000000000021E /* ClothingExtractor.swift in Sources */,
+				AA000000000000000000021F /* StyleMatchEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

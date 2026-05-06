@@ -1,6 +1,6 @@
 import Foundation
 
-struct OutfitSuggestion: Identifiable, Codable {
+struct OutfitSuggestion: Identifiable, Codable, Equatable {
     var id: UUID = UUID()
     var date: Date
     var top: WardrobeItem?

@@ -7,6 +7,9 @@ struct HomeView: View {
     
     @State private var showConfirmation = false
     @State private var showProfileSettings = false
+    @State private var selectedOccasion: Occasion = .casual
+    @State private var currentWeather: WeatherProfile = WeatherService.shared.currentProfile()
+    @State private var shareImage: UIImage? = nil
     
     private var today: Date { Date() }
     
@@ -35,6 +38,21 @@ struct HomeView: View {
                     
                     Spacer()
                     
+                    // Weather Widget
+                    HStack(spacing: 4) {
+                        Image(systemName: currentWeather.condition.icon)
+                            .foregroundColor(currentWeather.isHot ? .orange : (currentWeather.isCold ? .cyan : .gray))
+                        Text("\(currentWeather.temperature)°C")
+                            .font(.caption.weight(.bold))
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.white)
+                    .clipShape(Capsule())
+                    .shadow(color: Theme.shadowLight, radius: 4, y: 2)
+                    
+                    Spacer().frame(width: 8)
+                    
                     Button {
                         showProfileSettings = true
                     } label: {
@@ -53,6 +71,35 @@ struct HomeView: View {
                 // Hero Header
                 heroHeader
                     .fadeIn(delay: 0.1)
+                
+                // Occasion Picker
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(Occasion.allCases, id: \.self) { occ in
+                            Button {
+                                withAnimation(.spring(response: 0.4)) {
+                                    selectedOccasion = occ
+                                    outfitVM.generateSuggestion(for: today, profile: profileVM.profile, wardrobe: wardrobeVM.items, occasion: occ, weather: currentWeather)
+                                }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: occ.icon)
+                                    Text(occ.rawValue)
+                                }
+                                .font(.callout.weight(.medium))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
+                                .background(selectedOccasion == occ ? AnyShapeStyle(LinearGradient.vibrantAccent) : AnyShapeStyle(Color.white))
+                                .foregroundColor(selectedOccasion == occ ? .white : Theme.textSecondary)
+                                .clipShape(Capsule())
+                                .shadow(color: selectedOccasion == occ ? Theme.accentRed.opacity(0.3) : Theme.shadowLight, radius: 4, y: 2)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
+                }
+                .fadeIn(delay: 0.15)
                 
                 // Lucky Colors
                 LuckyColorBanner(
@@ -87,13 +134,32 @@ struct HomeView: View {
                 outfitVM.generateSuggestion(
                     for: today,
                     profile: profileVM.profile,
-                    wardrobe: wardrobeVM.items
+                    wardrobe: wardrobeVM.items,
+                    occasion: selectedOccasion,
+                    weather: currentWeather
                 )
             }
+        }
+        .onChange(of: outfitVM.currentSuggestion) { _ in
+            generateShareImage()
         }
         .sheet(isPresented: $showProfileSettings) {
             ProfileSettingsView(profileVM: profileVM)
         }
+    }
+    
+    @MainActor
+    private func generateShareImage() {
+        guard let suggestion = outfitVM.currentSuggestion else { return }
+        let card = ShareFitCard(
+            suggestion: suggestion,
+            wardrobeVM: wardrobeVM,
+            profile: profileVM.profile,
+            weather: currentWeather
+        )
+        let renderer = ImageRenderer(content: card)
+        renderer.scale = UIScreen.main.scale
+        shareImage = renderer.uiImage
     }
     
     // MARK: - Hero Header
@@ -279,15 +345,19 @@ struct HomeView: View {
     
     // MARK: - Action Buttons
     
+    @ViewBuilder
     private var actionButtons: some View {
-        HStack(spacing: 14) {
+        VStack(spacing: 16) {
+            HStack(spacing: 14) {
             Button {
                 let impact = UIImpactFeedbackGenerator(style: .medium)
                 impact.impactOccurred()
                 outfitVM.shuffleSuggestion(
                     for: today,
                     profile: profileVM.profile,
-                    wardrobe: wardrobeVM.items
+                    wardrobe: wardrobeVM.items,
+                    occasion: selectedOccasion,
+                    weather: currentWeather
                 )
             } label: {
                 HStack {
@@ -303,6 +373,28 @@ struct HomeView: View {
                 .shadow(color: Theme.shadowLight, radius: 6, x: 0, y: 3)
             }
             
+            if let img = shareImage {
+                ShareLink(
+                    item: Image(uiImage: img),
+                    preview: SharePreview("My Fit Drop 💧", image: Image(uiImage: img))
+                ) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Share Fit")
+                    }
+                    .font(.callout.weight(.semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.black)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .shadow(color: .black.opacity(0.3), radius: 6, x: 0, y: 3)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        
+        HStack {
             Button {
                 let impact = UINotificationFeedbackGenerator()
                 impact.notificationOccurred(.success)
@@ -329,6 +421,8 @@ struct HomeView: View {
             .opacity(outfitVM.currentSuggestion?.confirmed ?? false ? 0.5 : 1)
         }
         .padding(.horizontal, 16)
+        .padding(.top, 4)
+        }
     }
     
     // MARK: - Tip Card
